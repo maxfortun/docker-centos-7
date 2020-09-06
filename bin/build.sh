@@ -7,10 +7,7 @@ popd
 
 . $SWD/setenv.sh
 
-for layer in centos-7; do
-	docker build ${DOCKER_BUILD_ARGS[*]} ${LAST_LAYER_ARGS[*]} --rm -t "$REPO/$NAME-$layer:$VERSION" $layer
+docker build ${DOCKER_BUILD_ARGS[*]} ${LAST_LAYER_ARGS[*]} --rm -t "$REPO/$NAME:$VERSION" -t "$REPO/$NAME:latest" $NAME
 
-	dockerImages=$(docker images "$REPO/$NAME-$layer" -f "before=$REPO/$NAME-$layer:$VERSION" -q)
-	[ -n "$dockerImages" ] && docker rmi -f $dockerImages || true
-	LAST_LAYER_ARGS=( --build-arg LAST_LAYER=$layer )
-done
+dockerImages=$(docker images "$REPO/$NAME" -f "before=$REPO/$NAME:$VERSION" -q)
+[ -n "$dockerImages" ] && docker rmi -f $dockerImages || true
